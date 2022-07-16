@@ -16,10 +16,10 @@
                   food.disc > 0
                     ? calcDisc(food.price, food.disc) 
                     : food.price
-                  ) }} ,- / pack
+                  ) }},- / Box
                 <div v-if="food.disc > 0" class="block mt-1">
                   <span class="px-2 py-1 bg-red-300 text-xs rounded-lg">{{ food.disc }}%</span>
-                  <span class="line-through text-xs font-light">Rp{{formatCurrency(food.price)}} ,- / pack </span>
+                  <span class="line-through text-xs font-light">Rp{{formatCurrency(food.price)}} ,- / Box </span>
                 </div>
               </span>
               <button 
