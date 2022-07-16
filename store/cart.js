@@ -14,6 +14,19 @@ const mutations = {
       })
     }
   },
+  addQtyCart(state, index) {
+      state.dataCart[index].quantity += 1;
+  },
+  minusQtyCart(state, index) {
+    if(state.dataCart[index].quantity - 1 <= 0) {
+      state.dataCart.splice(index, 1)
+    } else {
+      state.dataCart[index].quantity -= 1;
+    }
+  },
+  removeItem(state, index) {
+    state.dataCart.splice(index, 1)
+  },
 };
 
 const getters = {
@@ -24,6 +37,15 @@ const getters = {
 const actions = {
   async setCart({ commit }, data) {
     commit('setState', data);
+  },
+  async addQty({ commit }, data) {
+    commit('addQtyCart', data);
+  },
+  async minusQty({ commit }, data) {
+    commit('minusQtyCart', data);
+  },
+  async removeItem({ commit }, data) {
+    commit('removeItem', data);
   },
 };
 
