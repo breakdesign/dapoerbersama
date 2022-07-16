@@ -4,24 +4,51 @@
       <div class="
             flex
             justify-between
-            md:justify-start
             items-center
             py-4
             px-6
             md:px-10
+            relative
           ">
         <div class="lg:flex-1 flex">
           <nuxt-link to="/" class="mr-0 md:mr-12">
             <img class="w-60" src="/logo.png" alt="Logo" />
           </nuxt-link>
         </div>
-        <button class="hover:bg-gray-200 w-8 h-8 rounded-lg hover:text-white transition-colors relative">
+        <button class="buttonMenu hover:bg-gray-200 w-8 h-8 rounded-lg hover:text-white transition-colors relative">
           <i class="ri-shopping-cart-fill text-xl text-secondary" />
-          <span class="absolute -top-1 -right-1 text-xs bg-primary rounded-full w-5 h-5 text-white border-2 border-white">0</span>
+          <span class="absolute -top-1 -right-1 text-xs bg-primary rounded-full w-5 h-5 text-white border-2 border-white">{{ cart.length }}</span>
+          <div class="hidden listMenu pt-5 absolute top-8 right-0 cursor-default">
+            <div class="border border-gray-300 bg-white p-5 shadow-lg rounded-lg border-b">
+              <div class="flex justify-between mb-3 border-b border-gray-300 pb-3">
+                <p class="text-secondary">Keranjang ({{ cart.length }})</p>
+                <nuxt-link to="/" class="text-primary text-sm">
+                  Lihat Semua
+                </nuxt-link>
+              </div>
+              <div class="text-center py-8" v-if="cart.length === 0">
+                <img src="/empty.png" alt="Empty" class="mb-5 mx-auto">
+                <p class="text-secondary">Produk belum dipesan</p>
+              </div>
+              <div class="h-80 max-h-full overflow-y-scroll" v-else>
+                <div class="flex items-center justify-between" v-for="(item, index) in cart" :key="index">
+                  <div class="flex items-center" :class="{'mb-3' : index + 1 !== cart.length}">
+                    <img class="w-20" :src="item.image" :alt="item.name" />
+                    <div class="text-left ml-3 flex flex-col justify-center">
+                      <span class="text-secondary font-bold">{{ item.name }}</span>
+                      <span class="text-secondary text-xs">{{ item.quantity }} pack</span>
+                    </div>
+                  </div>
+                  <span class="font-bold text-secondary">Rp{{ formatCurrency(
+                      item.disc > 0
+                        ? calcDisc(item.price, item.disc) 
+                        : item.price
+                      ) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </button>
-        <div>
-          
-        </div>
       </div>
     </div>
   </div>
@@ -48,7 +75,28 @@
           this.isScroll = false;
         }
       },
+      calcDisc(price, disc) {
+        const getDisc = price * (disc/100)
+        return price - getDisc
+      },
+      formatCurrency(price) {
+        return price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")
+      },
+    },
+    computed: {
+      cart() {
+        return this.$store.state.cart.dataCart
+      }
     },
   }
 
 </script>
+<style>
+.buttonMenu:hover .listMenu {
+  display: block;
+}
+.buttonMenu:hover .listMenu,
+.buttonMenu:hover .listMenu > div {
+  width: 450px;
+}
+</style>
